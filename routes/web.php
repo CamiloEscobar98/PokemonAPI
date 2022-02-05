@@ -16,3 +16,5 @@
 $router->get('/', function () use ($router) {
     return response('Welcome to Test IPT API V1.0');
 });
+
+$router->post('login', 'Auth\AuthController@login');
