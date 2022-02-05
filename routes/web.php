@@ -14,5 +14,5 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return response('Welcome to Test IPT API V1.0');
 });
