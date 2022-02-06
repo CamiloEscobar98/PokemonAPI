@@ -22,5 +22,5 @@ $router->post('login', 'Auth\AuthController@login');
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->get('users', 'UserController@index');
-    $router->get('pokemons', 'PokemonController@index');
+    $router->get('pokemons/{offset}[/{limit}]', 'PokemonController@index');    
 });

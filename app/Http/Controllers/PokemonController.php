@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Traits\PokemonRequest;
+use Illuminate\Http\Request;
 
 class PokemonController extends Controller
 {
@@ -12,9 +13,9 @@ class PokemonController extends Controller
         //
     }
 
-    public function index()
+    public function index($offset = 0, $limit = 10)
     {
-        return $this->pokemonList();
+        return $this->pokemonList($offset, $limit);
     }
 
     public function show()
