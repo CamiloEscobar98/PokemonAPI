@@ -13,7 +13,7 @@ class PokemonController extends Controller
         //
     }
 
-    public function index($offset = 0, $limit = 10)
+    public function index($offset, $limit = 10)
     {
         return $this->pokemonList($offset, $limit);
     }

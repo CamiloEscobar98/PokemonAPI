@@ -44,8 +44,7 @@ trait PokemonRequest
 
     public function getImage($url)
     {
-        $image_url = explode('https://pokeapi.co/api/v2/pokemon/', $url);
-        $image =  explode('/', $image_url[1])[0];
+        $image =  explode('/', explode('https://pokeapi.co/api/v2/pokemon/', $url)[1])[0];
         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$image.png";
     }
 }
