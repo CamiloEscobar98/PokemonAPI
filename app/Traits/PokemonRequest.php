@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 trait PokemonRequest
 {
@@ -21,6 +22,7 @@ trait PokemonRequest
 
             $cont = 0;
             while ($cont < sizeof($data['results'])) {
+                $data['results'][$cont]['name'] = Str::ucfirst($data['results'][$cont]['name']);
                 $data['results'][$cont]['image_url'] = $this->getImage($data['results'][$cont]['url']);
                 $cont++;
             }
