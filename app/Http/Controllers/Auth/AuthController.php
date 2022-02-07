@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -26,6 +27,41 @@ class AuthController extends Controller
             return response()->json(['status' => 'success', 'auth_token' => $apikey]);
         } else {
             return response()->json(['status' => 'fail'], 401);
+        }
+    }
+
+    public function profile(Request $request)
+    {
+        $rememberToken = $request->header('Authorization');
+        $user = User::where('remember_token', $rememberToken)->get(['fullname', 'email', 'phone', 'birth_date', 'nickname', 'real_password'])->first();
+        if (!empty($user)) {
+            return response()->json(['status' => 'success', 'user' => $user]);
+        } else {
+            return response()->json(['status' => 'not found'], 404);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        $rememberToken = $request->header('Authorization');
+        $user = User::where('remember_token', $rememberToken)->get()->first();
+        $rules = [
+            'fullname' => ['required', 'string'],
+            'email' => ['required',  Rule::unique('users', 'email')->ignore($user->uuid, 'uuid')],
+
+            'phone' => ['required', 'numeric'],
+            'birth_date' => ['required', 'date'],
+            'nickname' => ['required',  Rule::unique('users', 'nickname')->ignore($user->uuid, 'uuid')],
+
+            'real_password' => ['required', 'string']
+        ];
+        $this->validate($request, $rules);
+
+        $updated = $user->update($request->all());
+        if ($updated) {
+            return response()->json(['status' => 'success'], 200);
+        } else {
+            return response()->json(['status' => 'fail'], 500);
         }
     }
 }

@@ -19,6 +19,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
+
+    protected $primaryKey = 'uuid';
     protected $guarded = ['uuid'];
 
     /**

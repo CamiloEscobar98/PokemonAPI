@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::get(['fullname', 'email', 'phone', 'nickname', 'birth_date']);
+        $rememberToken = $request->header('Authorization');
+        $authEmail = User::where('remember_token', $rememberToken)->get(['email'])->first()->email;
+        $users = User::where('email', '!=', $authEmail)->get(['fullname', 'email', 'phone', 'nickname', 'birth_date']);
 
         if (!empty($users)) {
             return response()->json(['status' => 'success', 'data' => $users]);
