@@ -42,12 +42,19 @@ class AuthController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $user = User::create($request->all());
+        $user = User::create([
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'birth_date' => $request->birth_date,
+            'nickname' => $request->nickname,
+            'real_password' => $request->real_password,
+            'password' => Hash::make($request->real_password)
+        ]);
 
         if (!empty($user)) {
             $rememberToken = base64_encode(Str::random(40));
             $user->remember_token = $rememberToken;
-            $user->password = Hash::make($request->real_password);
             $user->save();
             return response()->json(['status' => 'success', 'auth_token' => $rememberToken]);
         } else {
