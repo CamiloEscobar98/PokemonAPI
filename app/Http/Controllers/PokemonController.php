@@ -13,13 +13,21 @@ class PokemonController extends Controller
         //
     }
 
-    public function index($offset, $limit = 10)
+    public function index(Request $request)
     {
-        return $this->pokemonList($offset, $limit);
+        $this->validate($request, [
+            'offset' => ['required', 'numeric'],
+            'limit' => ['numeric'],
+        ]);
+        return $this->pokemonList(offset: $request->get('offset'), limit: $request->get('limit', 10));
     }
 
-    public function show()
+    public function show(Request $request)
     {
-        # code...
+        $this->validate($request, [
+            'url' => ['required', 'url']
+        ]);
+
+        return $this->pokemonInfo($request->url());
     }
 }

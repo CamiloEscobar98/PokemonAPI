@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\User;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -27,6 +27,31 @@ class AuthController extends Controller
             return response()->json(['status' => 'success', 'auth_token' => $apikey]);
         } else {
             return response()->json(['status' => 'fail'], 401);
+        }
+    }
+
+    public function register(Request $request)
+    {
+        $rules = [
+            'fullname' => ['required', 'string', 'min: 8'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'numeric', 'unique:users,phone'],
+            'birth_date' => ['date'],
+            'nickname' => ['required', 'string', 'min:5', 'unique:users,nickname'],
+            'real_password' => ['required', 'string', 'min:4']
+        ];
+        $this->validate($request, $rules);
+
+        $user = User::create($request->all());
+
+        if (!empty($user)) {
+            $rememberToken = base64_encode(Str::random(40));
+            $user->remember_token = $rememberToken;
+            $user->password = Hash::make($request->real_password);
+            $user->save();
+            return response()->json(['status' => 'success', 'auth_token' => $rememberToken]);
+        } else {
+            return response()->json(['status' => 'fail', 'message' => 'User not created']);
         }
     }
 

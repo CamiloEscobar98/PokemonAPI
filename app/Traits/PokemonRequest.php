@@ -32,9 +32,15 @@ trait PokemonRequest
         }
     }
 
-    public function pokemonListNextPage(Request $request)
+    public function pokemonInfo($url)
     {
-        # code...
+        $response = Http::get($url);
+        if ($response->status() == 200) {
+            $data = $response->json();
+            return response()->json(['status' => 'success', 'data' => $data]);
+        } else {
+            return response()->json(['status' => 'fail'], 404);
+        }
     }
 
     private function getBaseUrl()

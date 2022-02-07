@@ -18,6 +18,7 @@ $router->get('/', function () use ($router) {
 });
 
 $router->post('login', 'Auth\AuthController@login');
+$router->post('register', 'Auth\AuthController@register');
 
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
@@ -25,5 +26,8 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->put('profile', 'Auth\AuthController@update');
 
     $router->get('users', 'UserController@index');
-    $router->get('pokemons/{offset}[/{limit}]', 'PokemonController@index');
+    $router->get('users/{uuid}', 'UserController@show');
+
+    $router->get('pokemons', 'PokemonController@index');
+    $router->get('pokemon', 'PokemonController@show');
 });
