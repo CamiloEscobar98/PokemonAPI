@@ -103,16 +103,22 @@ class AuthController extends Controller
         $rules = [
             'fullname' => ['required', 'string'],
             'email' => ['required',  Rule::unique('users', 'email')->ignore($user->uuid, 'uuid')],
-
             'phone' => ['required', 'numeric'],
             'birth_date' => ['required', 'date'],
             'nickname' => ['required',  Rule::unique('users', 'nickname')->ignore($user->uuid, 'uuid')],
-
             'real_password' => ['required', 'string']
         ];
         $this->validate($request, $rules);
 
-        $updated = $user->update($request->all());
+        $updated = $user->update([
+            'fullname' => $user->fullname,
+            'nickname' => $user->nickname,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'birth_date' => $user->birth_date,
+            'real_password' => $user->real_password,
+            'password' => Hash::make($user->real_password),
+        ]);
         if ($updated) {
             return response()->json(['status' => 'success'], 200);
         } else {
