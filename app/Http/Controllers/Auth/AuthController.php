@@ -111,13 +111,13 @@ class AuthController extends Controller
         $this->validate($request, $rules);
 
         $updated = $user->update([
-            'fullname' => $user->fullname,
-            'nickname' => $user->nickname,
-            'email' => $user->email,
-            'phone' => $user->phone,
-            'birth_date' => $user->birth_date,
-            'real_password' => $user->real_password,
-            'password' => Hash::make($user->real_password),
+            'fullname' => $request->fullname,
+            'nickname' => $request->nickname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'birth_date' => $request->birth_date,
+            'real_password' => $request->real_password,
+            'password' => Hash::make($request->real_password),
         ]);
         if ($updated) {
             return response()->json(['status' => 'success'], 200);
